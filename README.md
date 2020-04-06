@@ -1,4 +1,4 @@
-# 612-Project
+# 612-Project-Testing
 
 To get the repository via command line use the following command in the "src" folder of a catkin workspace:
 ```
