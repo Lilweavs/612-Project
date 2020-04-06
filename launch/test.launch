@@ -11,7 +11,7 @@ This is a ROS launch file which helps run several programs all in one file
     
     <rosparam file="$(find robot_simulation)/robot_description/config/config.yaml" command="load" />
 
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" ns="/simple_model" args="base_to_first_joint_position_controller joint_state_controller" />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" ns="/simple_model" args="base_to_first_joint_position_controller joint_state_controller first_to_second_joint_position_controller" />
 
     <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen" />
         <remap from="/joint_states" to="/simple_model/joint_states" />

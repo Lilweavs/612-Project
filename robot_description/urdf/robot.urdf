@@ -43,9 +43,9 @@ This file is used to build your robot using the URDF file format.
   <joint name="base_to_first_joint" type="continuous">
     <origin xyz="0 0 0.06" rpy="0 0.785 0" />
     <axis xyz="0 1 0" />
+    <limit effort="1.0" velocity="30.0" />
     <parent link="base_link" />
     <child link="first_link" />
-
     <dynamics damping="0.001" friction="0.0" />
   </joint>
 
@@ -70,9 +70,9 @@ This file is used to build your robot using the URDF file format.
     </collision>
 
     <inertial>
-      <mass value="1" />
+      <mass value="0.15156" />
       <origin xyz="0 0 0.25" rpy="0 0 0" />
-      <inertia ixx="0.13" ixy="0.0" ixz="0.0" iyy="0.13" iyz="0.0" izz="0.0001" />
+      <inertia ixx="0.00415" ixy="0.0" ixz="0.0" iyy="0.00415" iyz="0.0" izz="0.000035" />
     </inertial>    
   </link>
 
@@ -81,7 +81,7 @@ This file is used to build your robot using the URDF file format.
     <origin xyz="0 0 0.5" rpy="0 0 0" />
     <parent link="first_link" />
     <child link="second_link" />
-
+    <limit effort="1.0" velocity="30.0" />
     <dynamics damping="0.001" friction="0.0" />
   </joint>
 
@@ -106,9 +106,9 @@ This file is used to build your robot using the URDF file format.
     </collision>
 
     <inertial>
-      <mass value="1" />
+      <mass value="0.15156" />
       <origin xyz="0 0 0.25" rpy="0 0 0" />
-      <inertia ixx="0.13" ixy="0.0" ixz="0.0" iyy="0.13" iyz="0.0" izz="0.0001" />
+      <inertia ixx="0.00415" ixy="0.0" ixz="0.0" iyy="0.00415" iyz="0.0" izz="0.000035" />
     </inertial>    
   </link>
 
@@ -120,6 +120,7 @@ This file is used to build your robot using the URDF file format.
     </plugin>
   </gazebo>
 
+  <!-- Base to first link gear box-->
   <transmission name="base_to_first_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="motor_1">
@@ -129,4 +130,16 @@ This file is used to build your robot using the URDF file format.
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
   </transmission>
+
+    <!-- First to second link gear box-->
+  <transmission name="first_to_second_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor_2">
+      <mechanicalReduction>5</mechanicalReduction>
+    </actuator>
+    <joint name="first_to_second_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
 </robot>
