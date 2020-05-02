@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!--
+This file is used to build the target in URDF format.
+-->
+<robot name="my_target" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <link name="world" />
+      
+  <joint name="fixed" type="fixed">
+    <origin xyz="5 0 0" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="target_link" />
+  </joint>
+
+  <link name="target_link">
+    <visual>
+      <origin xyz="0 0 0.5" rpy="0 -0.523599 0"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/target_description/meshes/Target_Update.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      
+      <material name="grey">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.5" rpy="0 -0.523599 0"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/target_description/meshes/Target_Update.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="100"/>
+      <origin xyz="0 0 0.5" rpy="0 -0.523599 0"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>    
+  </link>
+
+</robot>

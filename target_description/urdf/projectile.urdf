@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<!--
+This file is used to build the target in URDF format.
+-->
+<robot name="my_projectile" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <link name="world" />
+
+  <joint name="projectile_joint" type="floating">
+    <!--origin xyz="0.3255 0 0.89" rpy="0 0 0" /-->
+    <origin xyz="0.005 0 0.565" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="projectile_link" />
+    <dynamics damping="0.01" friction="0.1" />
+  </joint>
+
+  <link name="projectile_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.02"/>
+        <!--mesh filename="package://robot_simulation/target_description/meshes/ping_pong_ball.STL" scale="0.001 0.001 0.001"/-->
+      </geometry>
+      
+      <material name="orange">
+        <color rgba="1.0 0.647 0.0 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0.0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.02"/>
+        <!--mesh filename="package://robot_simulation/target_description/meshes/ping_pong_ball.STL" scale="0.001 0.001 0.001"/-->
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.0029"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="6.7e-7" ixy="0.0" ixz="0.0" iyy="6.7e-7" iyz="0.0" izz="6.7e-7"/>
+    </inertial>    
+  </link>
+
+  <gazebo reference="projectile_link">
+    <gravity>1</gravity>
+    <maxVel>1000</maxVel>
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+    <kp>1e+20</kp>
+    <kd>1.0</kd>
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+</robot>

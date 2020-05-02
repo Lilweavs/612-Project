@@ -6,13 +6,14 @@ This file is used to build your robot using the URDF file format.
 <robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
     
   <link name="world" />
-      
-  <joint name="fixed" type="fixed">
+
+  <joint name="base_link_joint" type="continuous">
+    <axis xyz="0 0 1"/>
     <origin xyz="0 0 1.25" rpy="3.14159 0 0" />
     <parent link="world" />
     <child link="base_link" />
   </joint>
-
+  
     <!-- base link -->
   <link name="base_link">
     <visual>
@@ -41,7 +42,7 @@ This file is used to build your robot using the URDF file format.
   </link>
 
   <joint name="base_to_first_joint" type="continuous">
-    <origin xyz="0 0 0.06" rpy="0 0.785 0" />
+    <origin xyz="0 0 0.06" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="1.0" velocity="30.0" />
     <parent link="base_link" />
@@ -52,9 +53,9 @@ This file is used to build your robot using the URDF file format.
     <!-- 1st link -->
   <link name="first_link">
     <visual>
-      <origin xyz="0 0 0.250" rpy="0 3.14159 0"/>
+      <origin xyz="0 0 0.15" rpy="0 3.14159 0"/>
       <geometry>
-        <mesh filename="package://robot_simulation/robot_description/meshes/link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://robot_simulation/robot_description/meshes/first_link_v3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       
       <material name="grey">
@@ -63,22 +64,22 @@ This file is used to build your robot using the URDF file format.
     </visual>
 
     <collision>
-      <origin xyz="0 0 0.250" rpy="0 3.14159 0"/>
+      <origin xyz="0 0 0.15" rpy="0 3.14159 0"/>
       <geometry>
-        <mesh filename="package://robot_simulation/robot_description/meshes/link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://robot_simulation/robot_description/meshes/first_link_v3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
 
     <inertial>
-      <mass value="0.15156" />
-      <origin xyz="0 0 0.25" rpy="0 0 0" />
-      <inertia ixx="0.00415" ixy="0.0" ixz="0.0" iyy="0.00415" iyz="0.0" izz="0.000035" />
+      <mass value="0.05028" />
+      <origin xyz="0 0 0.12933" rpy="0 0 0" />
+      <inertia ixx="5.35e-4" ixy="0.0" ixz="0.0" iyy="5.43765e-4" iyz="0.0" izz="1.187e-5" />
     </inertial>    
   </link>
 
   <joint name="first_to_second_joint" type="continuous">
   <axis xyz="0 1 0" />
-    <origin xyz="0 0 0.5" rpy="0 0 0" />
+    <origin xyz="0 0 0.3" rpy="0 0 0" />
     <parent link="first_link" />
     <child link="second_link" />
     <limit effort="1.0" velocity="30.0" />
@@ -88,9 +89,9 @@ This file is used to build your robot using the URDF file format.
     <!-- 2nd link -->
   <link name="second_link">
     <visual>
-      <origin xyz="0 0 0.250" rpy="0 3.14159 0"/>
+      <origin xyz="0 0 0.15" rpy="0 3.14159 3.14159"/>
       <geometry>
-        <mesh filename="package://robot_simulation/robot_description/meshes/link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://robot_simulation/robot_description/meshes/second_link_v3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       
       <material name="grey">
@@ -99,18 +100,92 @@ This file is used to build your robot using the URDF file format.
     </visual>
 
     <collision>
-      <origin xyz="0 0 0.250" rpy="0 3.14159 0"/>
+      <origin xyz="0 0 0.15" rpy="0 3.14159 3.14159"/>
       <geometry>
-        <mesh filename="package://robot_simulation/robot_description/meshes/link.STL" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://robot_simulation/robot_description/meshes/second_link_v3.STL" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
 
     <inertial>
-      <mass value="0.15156" />
-      <origin xyz="0 0 0.25" rpy="0 0 0" />
-      <inertia ixx="0.00415" ixy="0.0" ixz="0.0" iyy="0.00415" iyz="0.0" izz="0.000035" />
+      <mass value="0.04670" />
+      <origin xyz="0 0 0.11595" rpy="0 0 0" />
+      <inertia ixx="4.1733e-4" ixy="0.0" ixz="0.0" iyy="4.2524e-4" iyz="0.0" izz="1.118e-5" />
     </inertial>    
   </link>
+
+  <joint name="second_to_end_effector" type="fixed">
+  <axis xyz="0 1 0" />
+    <origin xyz="0 0 0.3" rpy="0 0 0" />
+    <parent link="second_link" />
+    <child link="end_effector_link" />
+    <limit effort="1.0" velocity="30.0" />
+    <dynamics damping="0.001" friction="0.0" />
+  </joint>
+
+  <!-- end_effector -->
+  <link name="end_effector_link">
+    <visual>
+      <origin xyz="0 0 -0.05" rpy="0 0 -1.570796"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/robot_description/meshes/end_effector_spoon.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      
+      <material name="grey">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 -0.05" rpy="0 0 -1.570796"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/robot_description/meshes/end_effector_spoon.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.03233" />
+      <origin xyz="0 -0.00510 0.03963" rpy="0 0 0" />
+      <inertia ixx="1.507e-5" ixy="0.0" ixz="0.0" iyy="1.36175e-5" iyz="-2.7975e-6" izz="4.5075e-6" />
+    </inertial>    
+  </link>
+
+  <joint name="end_effector_to_latch" type="continuous">
+  <axis xyz="0 0 1" />
+    <origin xyz="0.0125 0 -0.01" rpy=" -1.570796 -1.470796 0" />
+    <parent link="end_effector_link" />
+    <child link="end_effector_latch_link" />
+    <limit effort="1.0" velocity="30.0" />
+    <dynamics damping="0.001" friction="0.0" />
+  </joint>
+
+  <!-- end_effector_latch -->
+  <link name="end_effector_latch_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/robot_description/meshes/end_effector_latch.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      
+      <material name="grey">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_simulation/robot_description/meshes/end_effector_latch.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="2.745e-3" />
+      <origin xyz="2.983e-2 4.2e-3 1e-5" rpy="0 0 0" />
+      <inertia ixx="2.484425e-7" ixy="9.98325e-8" ixz="-2e-10" iyy="1.509445e-6" iyz="-1.25e-10" izz="1.395095e-6" />
+    </inertial>    
+  </link>
+
+
 
 
   <!-- Need For Gazebo Integration -->
@@ -141,5 +216,28 @@ This file is used to build your robot using the URDF file format.
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
   </transmission>
+
+    <!-- end_effector to second latch gear box-->
+  <transmission name="end_effector_to_latch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor_3">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="end_effector_to_latch">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+      <!-- end_effector to second latch gear box-->
+  <transmission name="base_link_to_first_link">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor_4">
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+    <joint name="base_link_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
 
 </robot>
