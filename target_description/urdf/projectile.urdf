@@ -8,7 +8,7 @@ This file is used to build the target in URDF format.
 
   <joint name="projectile_joint" type="floating">
     <!--origin xyz="0.3255 0 0.89" rpy="0 0 0" /-->
-    <origin xyz="0.005 0 0.565" rpy="0 0 0" />
+    <origin xyz="0.005 0 0.315" rpy="0 0 0" />
     <parent link="world" />
     <child link="projectile_link" />
     <dynamics damping="0.01" friction="0.1" />

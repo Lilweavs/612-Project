@@ -11,11 +11,8 @@ t_total = 2
 class Trajectory_Planner:
 
     def __init__(self):
-        self.a0 = 0
-        self.a1 = 0
-        self.a2 = 1.398
-        self.a3 = -0.58528
         self.tf = 1
+        self.tim_res = 0.002
         self.t0 = rospy.Time.to_sec(rospy.get_rostime())
         self.states = ReleaseStates()
         self.coeff = []
@@ -23,7 +20,8 @@ class Trajectory_Planner:
         self.pub_joint1 = rospy.Publisher('/simple_model/base_to_first_joint_position_controller/command', Float64, queue_size=10)
         self.pub_joint2 = rospy.Publisher('/simple_model/first_to_second_joint_position_controller/command', Float64, queue_size=10)
         self.pub_latch = rospy.Publisher('/simple_model/end_effector_to_latch_position_controller/command', Float64, queue_size=10)
-        self.sub = rospy.Subscriber('/simple_model/joint_states', JointState, self.latch_release )
+        self.pub_base = rospy.Publisher('/simple_model/base_joint_position_controller/command', Float64, queue_size=10)
+        # self.sub = rospy.Subscriber('/simple_model/joint_states', JointState, self.latch_release )
         # self.timer = rospy.Timer(rospy.Duration(0.1), self.publish_path)
         #self.sub = rospy.Subscriber('/clock', Clock, self.get_time_callback)
         #rospy.Timer(rospy.Duration(0.1), publish_path)
@@ -35,18 +33,20 @@ class Trajectory_Planner:
 
     def cubic(self, t0, tf):
         retVal = np.array([[1, t0, t0**2, t0**3],
-                  [0, 1, 2*t0, 3*t0**2],
-                  [1, tf, tf**2, tf**3],
-                  [0, 1, 2*tf, 3*tf**2]])
+                            [0, 1, 2*t0, 3*t0**2],
+                            [1, tf, tf**2, tf**3],
+                            [0, 1, 2*tf, 3*tf**2]])
         return retVal
 
     def find_trajectory_plan(self):
         # Use jacobian to find joint velocities
         B1 = np.array([0, 0, self.states.q1, self.states.q1_dot])
         B2 = np.array([0, 0, self.states.q2, self.states.q2_dot])
+        B3 = np.array([0, 0, -self.states.angle, 0])
         A = self.cubic(0, self.tf)
+        A1 = self.cubic(0, 2)
 
-        retVal = [np.linalg.pinv(A).dot(B1), np.linalg.pinv(A).dot(B2)]
+        retVal = [np.linalg.pinv(A).dot(B1), np.linalg.pinv(A).dot(B2), np.linalg.pinv(A1).dot(B3)]
     
         return retVal
 
@@ -59,10 +59,23 @@ class Trajectory_Planner:
         print('Yeet!!!')
 
         self.t0 = rospy.Time.to_sec(rospy.get_rostime())
-        self.timer = rospy.Timer(rospy.Duration(0.1), self.publish_path)
+        self.timer = rospy.Timer(rospy.Duration(self.tim_res), self.publish_angle)
+        # self.timer = rospy.Timer(rospy.Duration(self.tim_res), self.publish_path)
         #self.t0 = rospy.Time.to_sec(rospy.get_rostime())
         #def publish_path(msg):
         #    print(msg)
+
+    def publish_angle(self, msg):
+
+        t = rospy.Time.to_sec(msg.current_real) - self.t0
+        val = self.coeff[2][0] + self.coeff[2][1]*t + self.coeff[2][2]*t**2 + self.coeff[2][3]*t**3
+        self.pub_base.publish(val)
+        if t >= (2):
+            print('Trajectory Complete')
+            self.timer.shutdown()
+            self.t0 = rospy.Time.to_sec(rospy.get_rostime())
+            self.timer = rospy.Timer(rospy.Duration(self.tim_res), self.publish_path)
+
 
     def publish_path(self, msg):
 
@@ -72,7 +85,7 @@ class Trajectory_Planner:
         print('t = ' + str(t) + ' q1d = ' + str(q1d) + ', q2d = ' + str(q2d))
         self.pub_joint1.publish(q1d)
         self.pub_joint2.publish(q2d)
-        if t >= self.tf:
+        if t >= (self.tf):
             print('Trajectory Complete')
             self.timer.shutdown()
         
@@ -81,6 +94,7 @@ class Trajectory_Planner:
         self.pub_joint1.publish(0)
         self.pub_joint2.publish(0)
         self.pub_latch.publish(0)
+        self.pub_base.publish(0)
 
 
 if __name__=="__main__":
