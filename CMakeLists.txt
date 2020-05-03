@@ -13,11 +13,23 @@ find_package(catkin REQUIRED
     roscpp
     rospy
     std_msgs
+    message_generation
 )
 
 ## Find system libraries
 #find_package(Eigen3 REQUIRED)
 #find_package(Boost REQUIRED)
+
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  ReleaseStates.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -33,13 +45,16 @@ catkin_package(
     include
 #    ${EIGEN3_INCLUDE_DIR}
   LIBRARIES
-    ${PROJECT_NAME}_core
+    ${PROJECT_NAME}
   CATKIN_DEPENDS
+    rospy
     roscpp
-    sensor_msgs
+    std_msgs
 #  DEPENDS
 #    Boost
 )
+
+
 
 ###########
 ## Build ##
@@ -64,6 +79,8 @@ include_directories(
 #  src/${PROJECT_NAME}_node.cpp
 #  src/RosPackageTemplate.cpp
 #)
+
+#add_dependencies(robot_simulation ${catkin_EXPORTED_TARGETS})
 
 ## Add dependencies to exported targets, like ROS msgs or srvs
 #add_dependencies(${PROJECT_NAME}_core

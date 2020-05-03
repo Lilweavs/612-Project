@@ -14,5 +14,5 @@
   <!--<depend>boost</depend>-->
   <depend>roscpp</depend>
   <depend>rospy</depend>
-  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
 </package>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This is a ROS launch file which helps run several programs all in one file
+-->
+<launch>
+    
+    <param name="target_description" textfile="$(find robot_simulation)/target_description/urdf/target.urdf" />
+
+    <node name="my_target_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param target_description -model my_target" /> 
+
+</launch>    

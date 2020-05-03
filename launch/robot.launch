@@ -7,11 +7,12 @@ This is a ROS launch file which helps run several programs all in one file
     <param name="robot_description" textfile="$(find robot_simulation)/robot_description/urdf/robot.urdf" />
 
     <node name="my_robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
-        args="-urdf -param robot_description -model my_robot" />
+        args="-urdf -param robot_description -model my_robot" /> 
     
     <rosparam file="$(find robot_simulation)/robot_description/config/config.yaml" command="load" />
 
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" ns="/simple_model" args="base_to_first_joint_position_controller joint_state_controller first_to_second_joint_position_controller" />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" ns="/simple_model" 
+        args="base_to_first_joint_position_controller joint_state_controller first_to_second_joint_position_controller end_effector_to_latch_position_controller base_joint_position_controller" />
 
     <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen" />
         <remap from="/joint_states" to="/simple_model/joint_states" />
