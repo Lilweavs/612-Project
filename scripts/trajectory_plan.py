@@ -21,14 +21,10 @@ class Trajectory_Planner:
         self.pub_joint2 = rospy.Publisher('/simple_model/first_to_second_joint_position_controller/command', Float64, queue_size=10)
         self.pub_latch = rospy.Publisher('/simple_model/end_effector_to_latch_position_controller/command', Float64, queue_size=10)
         self.pub_base = rospy.Publisher('/simple_model/base_joint_position_controller/command', Float64, queue_size=10)
-        # self.sub = rospy.Subscriber('/simple_model/joint_states', JointState, self.latch_release )
-        # self.timer = rospy.Timer(rospy.Duration(0.1), self.publish_path)
-        #self.sub = rospy.Subscriber('/clock', Clock, self.get_time_callback)
-        #rospy.Timer(rospy.Duration(0.1), publish_path)
 
     def latch_release(self, msg):
         rospy.loginfo(msg.position[3])
-        if (msg.position[1]) > np.pi/16:
+        if (msg.position[1]) > np.pi/32:
             self.pub_latch.publish(np.pi/2)
 
     def cubic(self, t0, tf):

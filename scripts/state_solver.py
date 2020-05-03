@@ -11,21 +11,19 @@ class StateSolver():
   def __init__(self):
     rospy.init_node("State_Solver")
     self.L1 = 0.3
-    self.L2 = 0.3
+    self.L2 = 0.255
     self.q1 = 0
     self.q2 = 0
-    self.J = np.array(0)
     self.msg = ReleaseStates()
-    self.v = np.array([5, 5])
     self.pub = rospy.Publisher("/end_states", ReleaseStates, queue_size=10)
 
   # output: q1, q2, q3, v
-  def state_solver(self, x, y, z):
+  def state_solver(self, x, y, z, angle):
     
     x = float(x)
     y = float(y)
     z = float(z)
-
+    angle = float(angle)
     self.msg.angle = np.arctan( y / x )
 
     #Parameters
@@ -72,8 +70,8 @@ class StateSolver():
 
     states = release_point(np.sqrt(x**2 + y**2), 0.3, 30)
 
-    self.msg.q1 = np.deg2rad(states[0])*1.05
-    self.msg.q2 = np.deg2rad(states[1])*1.05
+    self.msg.q1 = np.deg2rad(states[0])*1.2
+    self.msg.q2 = np.deg2rad(states[1])*1.2
     self.msg.q1_dot = states[2]
     self.msg.q2_dot = states[3]
 
@@ -121,7 +119,7 @@ if __name__=="__main__":
         connections = n.pub.get_num_connections()
         rospy.loginfo('Connections: %d', connections)
         if connections > 0:
-          n.state_solver(sys.argv[1], sys.argv[2], sys.argv[3])
+          n.state_solver(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
           rospy.loginfo('Published')
           break
         rate.sleep()

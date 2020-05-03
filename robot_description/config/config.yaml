@@ -6,12 +6,12 @@ simple_model:
   base_to_first_joint_position_controller:
     type: effort_controllers/JointPositionController
     joint: base_to_first_joint
-    pid: {p: 40.0, i: 0, d: 1}
+    pid: {p: 40.0, i: 4, d: 0.5}
 
   first_to_second_joint_position_controller:
     type: effort_controllers/JointPositionController
     joint: first_to_second_joint
-    pid: {p: 40.0, i: 0, d: 1.1}
+    pid: {p: 40.0, i: 4, d: 0.5}
 
   end_effector_to_latch_position_controller:
     type: effort_controllers/JointPositionController
